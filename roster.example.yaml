@@ -1,0 +1,134 @@
+# Roster do Escritório — quem pode ser chamado por nome pelas suas sessões Claude Code.
+#
+# `brief` é a ÚNICA coisa devolvida pelo roster(): é assim que se descobre com quem
+# falar sem carregar nenhum .md. Escreva pensando em "quando eu chamaria essa pessoa".
+#
+# tier:  advisor  = lê e aconselha, não escreve arquivo (padrão, e o certo pra quase tudo)
+#        editor   = escreve no working tree, mas só sob claim() ativo
+#        worktree = ganha git worktree próprio e entrega branch/diff
+#
+# Caminhos aceitam ~ e ${VAR}. ESCRITORIO_WORKSPACE é definido por máquina
+# (Mac aponta pro SSD, VM aponta pro home) — é o que faz este arquivo servir nas duas.
+
+# ---------------- DSG ----------------
+
+tech-lead-dsg:
+  brief: "Orquestra implementações no DSG e sabe qual especialista chamar para cada módulo"
+  agent_file: ${ESCRITORIO_WORKSPACE}/dsg/.agent/tech-lead.md
+  caderno: ${ESCRITORIO_WORKSPACE}/pessoal/escritorio/cadernos/tech-lead-dsg.md
+  tier: advisor
+  cwd: ${ESCRITORIO_WORKSPACE}/dsg/v1
+
+especialista-deposito:
+  brief: "Depósito antecipado: cobrança, pagamento, reembolso e cancelamento (DSG/v1)"
+  agent_file: ${ESCRITORIO_WORKSPACE}/dsg/.agent/especialista-deposito.md
+  caderno: ${ESCRITORIO_WORKSPACE}/pessoal/escritorio/cadernos/especialista-deposito.md
+  tier: advisor
+  cwd: ${ESCRITORIO_WORKSPACE}/dsg/v1
+
+especialista-banco-de-dados:
+  brief: "Convenções de TypeORM, migrations, entidades e queries brutas (DSG/v1)"
+  agent_file: ${ESCRITORIO_WORKSPACE}/dsg/.agent/especialista-banco-de-dados.md
+  caderno: ${ESCRITORIO_WORKSPACE}/pessoal/escritorio/cadernos/especialista-banco-de-dados.md
+  tier: advisor
+  cwd: ${ESCRITORIO_WORKSPACE}/dsg/v1
+
+especialista-cache:
+  brief: "Convenções de cache Redis no DSG/v1"
+  agent_file: ${ESCRITORIO_WORKSPACE}/dsg/.agent/especialista-cache.md
+  caderno: ${ESCRITORIO_WORKSPACE}/pessoal/escritorio/cadernos/especialista-cache.md
+  tier: advisor
+  cwd: ${ESCRITORIO_WORKSPACE}/dsg/v1
+
+especialista-filas:
+  brief: "Filas e mensageria: AWS SQS e Bull (DSG/v1)"
+  agent_file: ${ESCRITORIO_WORKSPACE}/dsg/.agent/especialista-filas.md
+  caderno: ${ESCRITORIO_WORKSPACE}/pessoal/escritorio/cadernos/especialista-filas.md
+  tier: advisor
+  cwd: ${ESCRITORIO_WORKSPACE}/dsg/v1
+
+especialista-frontend:
+  brief: "Frontend v1 (Vue/Quasar) — tudo sob v1/front/"
+  agent_file: ${ESCRITORIO_WORKSPACE}/dsg/.agent/especialista-frontend.md
+  caderno: ${ESCRITORIO_WORKSPACE}/pessoal/escritorio/cadernos/especialista-frontend.md
+  tier: advisor
+  cwd: ${ESCRITORIO_WORKSPACE}/dsg/v1
+
+especialista-arquitetura:
+  brief: "Decisões que atravessam fronteiras de módulo ou mudam padrões de comunicação (DSG/v1)"
+  agent_file: ${ESCRITORIO_WORKSPACE}/dsg/.agent/especialista-arquitetura.md
+  caderno: ${ESCRITORIO_WORKSPACE}/pessoal/escritorio/cadernos/especialista-arquitetura.md
+  tier: advisor
+  cwd: ${ESCRITORIO_WORKSPACE}/dsg/v1
+
+especialista-grupos-permissoes:
+  brief: "Módulo group_permissions: grupos, permissões e autorização (DSG)"
+  agent_file: ${ESCRITORIO_WORKSPACE}/dsg/.agent/especialista-grupos-permissoes.md
+  caderno: ${ESCRITORIO_WORKSPACE}/pessoal/escritorio/cadernos/especialista-grupos-permissoes.md
+  tier: advisor
+  cwd: ${ESCRITORIO_WORKSPACE}/dsg/v1
+
+especialista-reserva-horario:
+  brief: "Reserva de horário e disponibilidade de agenda (DSG/v1)"
+  agent_file: ${ESCRITORIO_WORKSPACE}/dsg/.agent/especialista-reserva-horario.md
+  caderno: ${ESCRITORIO_WORKSPACE}/pessoal/escritorio/cadernos/especialista-reserva-horario.md
+  tier: advisor
+  cwd: ${ESCRITORIO_WORKSPACE}/dsg/v1
+
+especialista-status-agendamento:
+  brief: "Máquina de estados e ciclo de vida do agendamento (DSG/v1)"
+  agent_file: ${ESCRITORIO_WORKSPACE}/dsg/.agent/especialista-status-agendamento.md
+  caderno: ${ESCRITORIO_WORKSPACE}/pessoal/escritorio/cadernos/especialista-status-agendamento.md
+  tier: advisor
+  cwd: ${ESCRITORIO_WORKSPACE}/dsg/v1
+
+especialista-luma:
+  brief: "LUMA / MaviIA: canal WhatsApp baseado em IA no base-api (DSG/v2)"
+  agent_file: ${ESCRITORIO_WORKSPACE}/dsg/.agent/especialista-luma.md
+  caderno: ${ESCRITORIO_WORKSPACE}/pessoal/escritorio/cadernos/especialista-luma.md
+  tier: advisor
+  cwd: ${ESCRITORIO_WORKSPACE}/dsg/v2
+
+especialista-traceai:
+  brief: "Consulta OPP/OP no TraceAI via API — login, navegação e extração de dados"
+  agent_file: ${ESCRITORIO_WORKSPACE}/dsg/.agent/especialista-traceai.md
+  caderno: ${ESCRITORIO_WORKSPACE}/pessoal/escritorio/cadernos/especialista-traceai.md
+  tier: advisor
+  cwd: ${ESCRITORIO_WORKSPACE}/dsg
+
+# ---------------- CAST ----------------
+
+tech-lead-cast:
+  brief: "Orquestra implementações que afetam múltiplos sistemas CAST/TJAM"
+  agent_file: ${ESCRITORIO_WORKSPACE}/cast/.agent/tech-lead.md
+  caderno: ${ESCRITORIO_WORKSPACE}/pessoal/escritorio/cadernos/tech-lead-cast.md
+  tier: advisor
+  cwd: ${ESCRITORIO_WORKSPACE}/cast
+
+especialista-sgsa:
+  brief: "SGSA — Sistema de Gestão de Senhas do TJAM (api + ui)"
+  agent_file: ${ESCRITORIO_WORKSPACE}/cast/.agent/especialista-sgsa.md
+  caderno: ${ESCRITORIO_WORKSPACE}/pessoal/escritorio/cadernos/especialista-sgsa.md
+  tier: advisor
+  cwd: ${ESCRITORIO_WORKSPACE}/cast/sgsa
+
+especialista-contratos:
+  brief: "Gestão de Contratos do TJAM (tjam-contratos api + web)"
+  agent_file: ${ESCRITORIO_WORKSPACE}/cast/.agent/especialista-contratos.md
+  caderno: ${ESCRITORIO_WORKSPACE}/pessoal/escritorio/cadernos/especialista-contratos.md
+  tier: advisor
+  cwd: ${ESCRITORIO_WORKSPACE}/cast/contratos
+
+especialista-sisdoc:
+  brief: "SisDoc — Sistema de Gestão Documental do TJAM (sisdoc-api)"
+  agent_file: ${ESCRITORIO_WORKSPACE}/cast/.agent/especialista-sisdoc.md
+  caderno: ${ESCRITORIO_WORKSPACE}/pessoal/escritorio/cadernos/especialista-sisdoc.md
+  tier: advisor
+  cwd: ${ESCRITORIO_WORKSPACE}/cast/sisdoc
+
+especialista-tjam-gitlab:
+  brief: "Acesso GitLab/VPN TJAM e o workspace CAST que vive na VM Oracle"
+  agent_file: ${ESCRITORIO_WORKSPACE}/cast/.agent/especialista-tjam-gitlab.md
+  caderno: ${ESCRITORIO_WORKSPACE}/pessoal/escritorio/cadernos/especialista-tjam-gitlab.md
+  tier: advisor
+  cwd: ${ESCRITORIO_WORKSPACE}/cast
