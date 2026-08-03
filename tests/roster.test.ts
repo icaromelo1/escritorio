@@ -95,12 +95,36 @@ describe('resolverTier — rebaixa mas nunca eleva', () => {
 })
 
 describe('flagsPorTier', () => {
-  it('advisor não pode escrever arquivo', () => {
+  it('advisor usa ALLOWLIST — denylist deixava o buraco do Bash', () => {
     const f = flagsPorTier('advisor')
-    expect(f).toContain('--disallowedTools')
-    expect(f).toContain('Edit')
-    expect(f).toContain('Write')
-    expect(f).toContain('NotebookEdit')
+    expect(f[0]).toBe('--allowedTools')
+    expect(f).not.toContain('--disallowedTools')
+  })
+
+  it('advisor não recebe nenhuma ferramenta de escrita', () => {
+    const f = flagsPorTier('advisor')
+    for (const proibida of ['Edit', 'Write', 'NotebookEdit']) {
+      expect(f).not.toContain(proibida)
+    }
+  })
+
+  it('advisor NUNCA roda em bypassPermissions (ignora restrição)', () => {
+    expect(flagsPorTier('advisor')).not.toContain('bypassPermissions')
+  })
+
+  it('advisor só recebe Bash em padrões de leitura', () => {
+    const bash = flagsPorTier('advisor').filter((f) => f.startsWith('Bash('))
+    expect(bash.length).toBeGreaterThan(0)
+    for (const padrao of bash) {
+      expect(padrao).toMatch(/^Bash\((git (log|show|diff|status|branch|blame)|grep|rg|ls|find|cat|head|tail|wc):\*\)$/)
+    }
+  })
+
+  it('advisor mantém as tools do escritório, senão não fala com ninguém', () => {
+    const f = flagsPorTier('advisor')
+    expect(f).toContain('mcp__escritorio__dm')
+    expect(f).toContain('mcp__escritorio__ask')
+    expect(f).toContain('mcp__escritorio__roster')
   })
 
   it('editor e worktree aceitam edição', () => {

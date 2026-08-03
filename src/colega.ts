@@ -154,23 +154,63 @@ export async function acordarColega(opts: OpcoesAcordar): Promise<RespostaHeadle
   return resposta
 }
 
-async function resolverCwd(
+export function nomeDoWorktree(colega: string, threadId: string): string {
+  return `${colega}-${threadId.slice(0, 8)}`
+}
+
+export function pastaDosWorktrees(): string {
+  return process.env.ESCRITORIO_WORKTREES ?? join(homedir(), '.escritorio', 'worktrees')
+}
+
+/**
+ * Onde o colega vai trabalhar.
+ *
+ * Tier `worktree` NUNCA cai de volta no working tree do Icaro: se o worktree não puder
+ * ser criado, o correio recusa acordar o colega. Silenciosamente escrever no repo real
+ * seria pior do que não rodar — é justamente o que esse tier existe pra impedir.
+ */
+export async function resolverCwd(
   colega: ColegaConfig,
   tier: Tier,
   threadId: string,
 ): Promise<string | undefined> {
   const base = colega.cwd ? expandirCaminho(colega.cwd) : undefined
-  if (tier !== 'worktree' || !base) return base
-
-  const destino = join(homedir(), '.escritorio', 'worktrees', `${colega.nome}-${threadId.slice(0, 8)}`)
-  mkdirSync(join(homedir(), '.escritorio', 'worktrees'), { recursive: true })
-  try {
-    await execFileAsync('git', ['-C', base, 'worktree', 'add', '-b', `escritorio/${colega.nome}-${threadId.slice(0, 8)}`, destino])
-    return destino
-  } catch {
-    // worktree já existe (thread retomada) ou não é repo git — segue no cwd normal
-    return destino !== base && existeDir(destino) ? destino : base
+  if (tier !== 'worktree') return base
+  if (!base) {
+    throw new Error(
+      `colega "${colega.nome}" é tier worktree mas não tem "cwd" no roster — sem repo não há worktree para isolar`,
+    )
   }
+
+  const nome = nomeDoWorktree(colega.nome, threadId)
+  const destino = join(pastaDosWorktrees(), nome)
+  mkdirSync(pastaDosWorktrees(), { recursive: true })
+
+  // thread retomada: o worktree dessa conversa já existe
+  if (existeDir(destino)) return destino
+
+  try {
+    await execFileAsync('git', [
+      '-C',
+      base,
+      'worktree',
+      'add',
+      '-b',
+      `escritorio/${nome}`,
+      destino,
+    ])
+  } catch (err) {
+    throw new Error(
+      `não consegui criar o worktree de "${colega.nome}" a partir de ${base}: ${
+        err instanceof Error ? err.message.split('\n')[0] : String(err)
+      }`,
+    )
+  }
+
+  if (!existeDir(destino)) {
+    throw new Error(`worktree de "${colega.nome}" não apareceu em ${destino}`)
+  }
+  return destino
 }
 
 function existeDir(p: string): boolean {

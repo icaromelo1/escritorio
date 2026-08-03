@@ -42,7 +42,7 @@ describe('montarArgs', () => {
       mensagem: 'oi', systemPrompt: 's', tier: 'advisor',
       modelo: 'claude-sonnet-5', idDoColega: 'x',
     })
-    expect(args).toContain('--disallowedTools')
+    expect(args).toContain('--allowedTools')
     expect(args[args.indexOf('--model') + 1]).toBe('claude-sonnet-5')
   })
 

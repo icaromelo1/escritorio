@@ -77,11 +77,27 @@ e VM, onde o workspace mora em lugares diferentes.
 
 | tier | pode | como é imposto |
 |---|---|---|
-| `advisor` | ler e aconselhar | `--disallowedTools Edit Write NotebookEdit` |
-| `editor` | escrever no working tree | só sob `claim()` ativo; o correio recusa acordar sem ele |
-| `worktree` | escrever isolado | ganha git worktree próprio, entrega branch |
+| `advisor` | ler e aconselhar | **allowlist** de tools (`--allowedTools`): leitura, Bash read-only e as tools do escritório |
+| `editor` | escrever no working tree | `acceptEdits`, e só sob `claim()` ativo — o correio recusa acordar sem ele |
+| `worktree` | escrever isolado | git worktree próprio; se não der pra criar, **recusa** em vez de cair no repo real |
 
 Um pedido pode **rebaixar** o tier na consulta, nunca elevar.
+
+### Por que allowlist e não denylist
+
+A primeira versão usava `--disallowedTools Edit Write NotebookEdit` com `bypassPermissions`.
+Testado com `claude` de verdade, **vazou**: o colega escreveu o arquivo via `Bash`, que não estava
+na negação. Medido nas quatro variantes:
+
+| flags | resultado |
+|---|---|
+| `bypassPermissions` + nega Edit/Write | **vazou** (escreveu via Bash) |
+| `bypassPermissions` + nega Edit/Write/Bash | segurou |
+| sem permission-mode + nega Edit/Write/Bash | segurou |
+| sem permission-mode + **allowlist** read-only | segurou, e ainda leu `git log` normalmente |
+
+Ficou a allowlist: o que eu esquecer de listar fica **negado** em vez de liberado. Vale notar que
+`Bash(cat:*)` na allowlist **não** permitiu escapar por redirecionamento (`cat > arquivo`).
 
 ## Identidade
 
@@ -92,9 +108,11 @@ Cada sessão precisa de um nome. `ESCRITORIO_ID` quando declarado; sem ele, deri
 ## Testes
 
 ```bash
-npm test                      # 103 testes, sem gastar API
-node scripts/smoke-mcp.mjs    # sobe o servidor MCP de verdade via stdio
-node scripts/smoke-e2e.mjs    # E2E REAL — acorda colega com `claude -p` (gasta API)
+npm test                        # 117 testes, sem gastar API
+node scripts/smoke-mcp.mjs      # sobe o servidor MCP de verdade via stdio
+node scripts/smoke-e2e.mjs      # E2E REAL: acorda colega, --resume, caderno (gasta API)
+node scripts/smoke-escrita.mjs  # E2E REAL dos 3 tiers: advisor bloqueado, worktree isolado,
+                                # editor sob claim (gasta API)
 ```
 
 ## Limitações conhecidas

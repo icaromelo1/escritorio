@@ -87,18 +87,51 @@ export function resolverTier(doRoster: Tier, pedido?: Tier | null): Tier {
   return iPedido < iRoster ? pedido : doRoster
 }
 
-const FERRAMENTAS_DE_ESCRITA = ['Edit', 'Write', 'NotebookEdit']
+/** As tools do próprio escritório: sem elas o colega não consegue falar com ninguém. */
+export const TOOLS_DO_ESCRITORIO = [
+  'mcp__escritorio__roster',
+  'mcp__escritorio__ask',
+  'mcp__escritorio__dm',
+  'mcp__escritorio__inbox',
+  'mcp__escritorio__board',
+  'mcp__escritorio__claim',
+  'mcp__escritorio__fechar_thread',
+]
+
+/**
+ * Allowlist do advisor. É allowlist e não denylist por um motivo verificado na marra:
+ * negar Edit/Write deixa o buraco do Bash (`echo x > arquivo`), e `bypassPermissions`
+ * ignora a negação. Com allowlist, o que eu esquecer fica negado em vez de liberado.
+ */
+export const FERRAMENTAS_DO_ADVISOR = [
+  'Read',
+  'Grep',
+  'Glob',
+  'WebFetch',
+  'WebSearch',
+  'Bash(git log:*)',
+  'Bash(git show:*)',
+  'Bash(git diff:*)',
+  'Bash(git status:*)',
+  'Bash(git branch:*)',
+  'Bash(git blame:*)',
+  'Bash(grep:*)',
+  'Bash(rg:*)',
+  'Bash(ls:*)',
+  'Bash(find:*)',
+  'Bash(cat:*)',
+  'Bash(head:*)',
+  'Bash(tail:*)',
+  'Bash(wc:*)',
+  ...TOOLS_DO_ESCRITORIO,
+]
 
 /** Flags do CLI que impõem o tier. */
 export function flagsPorTier(tier: Tier): string[] {
   switch (tier) {
     case 'advisor':
-      return [
-        '--permission-mode',
-        'bypassPermissions',
-        '--disallowedTools',
-        ...FERRAMENTAS_DE_ESCRITA,
-      ]
+      // sem --permission-mode: no headless, o que está fora da allowlist é negado
+      return ['--allowedTools', ...FERRAMENTAS_DO_ADVISOR]
     case 'editor':
     case 'worktree':
       return ['--permission-mode', 'acceptEdits']
