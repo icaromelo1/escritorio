@@ -99,6 +99,31 @@ na negação. Medido nas quatro variantes:
 Ficou a allowlist: o que eu esquecer de listar fica **negado** em vez de liberado. Vale notar que
 `Bash(cat:*)` na allowlist **não** permitiu escapar por redirecionamento (`cat > arquivo`).
 
+## Ver acontecendo
+
+```bash
+npm run tail
+```
+
+Segue o correio e imprime o que acontece **entre todas as sessões** — quadro escrito, claim,
+thread aberta, mensagem trocada, resposta chegando:
+
+```
+Escritório — monitor ao vivo
+sessões vistas na última hora: icaromelo@v1, icaromelo@kairos-ui, icaromelo@oraculo-api, …
+threads abertas: (nenhuma)
+────────────────────────────────────────────────────────────────────────
+13:26:36 ▤ quadro dsg/v1:decisoes = cache sempre via RedisService · icaromelo@v1
+13:26:37 🔒 claim src/infra/redis por icaromelo@v1 · revisar TTLs
+13:26:38 ⊕ thread [477cfbdc] Em uma frase: qual TTL padrao usamos? · dono icaromelo@v1
+13:26:38 icaromelo@v1 →? especialista-cache  [477cfbdc]
+        Em uma frase: qual TTL padrao usamos?
+13:26:44 especialista-cache ←! icaromelo@v1  [477cfbdc]
+        O TTL padrão é 3600 segundos (1 hora) — mas sempre passe TTL explícito…
+```
+
+`→?` é pergunta bloqueante, `→ ` recado, `←!` resposta.
+
 ## Identidade
 
 Cada sessão precisa de um nome. `ESCRITORIO_ID` quando declarado; sem ele, deriva de
